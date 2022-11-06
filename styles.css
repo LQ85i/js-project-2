@@ -6,4 +6,32 @@ body {
 
 .container {
     color:white;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    align-self: center;
+}
+
+#board {
+    align-self: center;
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+}
+
+.slot {
+    border: 1px solid white;
+    font-size: 90px;
+    text-align: center;
+}
+
+.hover {
+    color: rgba(255, 255, 255, 0.233);
+}
+
+
+#turn-indicator {
+    align-self: center;
 }
