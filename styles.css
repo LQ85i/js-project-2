@@ -35,3 +35,36 @@ body {
 #turn-indicator {
     align-self: center;
 }
+
+#postgame-win {
+    display: none;
+    position: absolute;
+    align-self: center;
+    text-align: center;
+    padding-top: 140px;
+    font-size: 50px;
+    width: 400px;
+    height: 250px;
+    backdrop-filter: blur(7px);
+}
+
+#postgame-draw {
+    display: none;
+    position: absolute;
+    align-self: center;
+    text-align: center;
+    padding-top: 140px;
+    font-size: 50px;
+    width: 400px;
+    height: 250px;
+    backdrop-filter: blur(7px);
+}
+
+.play-again {
+    background-color: rgb(49, 49, 100);
+    color: white;
+    padding: 10px;
+    font-size: 15px;
+    border: 7px inline white;
+    border-radius: 5px
+}
