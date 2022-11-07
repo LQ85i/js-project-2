@@ -30,7 +30,7 @@ const gameBoard = (() => {
         }
     }
     const getBoardState = () => boardState;
-    return {getBoardState, updateBoard};
+    return {getBoardState, updateBoard, resetBoard};
 })();
 
 //player factory
@@ -42,8 +42,8 @@ const Player = (name) => {
 //game logic module
 const gameEngine = ((slot) => {
     let turn = 1;
-    const board = gameBoard.getBoardState();
-    
+    let board = gameBoard.getBoardState();
+    let slotsLeft = 9;
     const clickSlot = (slot) => {
         if(turn != 0) {
             let value = "";
@@ -53,29 +53,40 @@ const gameEngine = ((slot) => {
                 : console.log("Error: invalid slot value");
                     gameBoard.updateBoard(slot.id,value);
                 const result = checkWinCondition();
+                slotsLeft--;
                 if(result != 0) {
-                    console.log("WINNER IS: " + result);
+                    console.log("WINNER IS: " + result[0]);
+                    document.getElementById("postgame-win").style.display = "block";
+                    document.getElementById("winner").innerHTML = result[0];
+                    turn = 0;
+                }
+                else if(slotsLeft == 0) {
+                    console.log("DRAW");
+                    document.getElementById("postgame-draw").style.display = "block";
                     turn = 0;
                 }
                 return true;
             }
+        }
+        else {
+            return false;
         }
     }
     
     const getTurn = () => turn;
     function checkWinCondition() {
         if (
-            board["slot1"] != 0 //top row
+            board["slot1"] != 0 // top row
             && board["slot1"] == board["slot2"]
             && board["slot2"] == board["slot3"]
         ) {return [board["slot1"],board["slot2"],board["slot3"]];}
         else if (
-            board["slot4"] != 0 //mid row
+            board["slot4"] != 0 // mid row
             && board["slot4"] == board["slot5"]
             && board["slot5"] == board["slot6"]
         ) {return [board["slot4"],board["slot5"],board["slot6"]];}
         else if (
-            board["slot7"] != 0 //bot row
+            board["slot7"] != 0 // bot row
             && board["slot7"] == board["slot8"]
             && board["slot8"] == board["slot9"]
         ) {return [board["slot7"],board["slot8"],board["slot9"]];}
@@ -95,7 +106,7 @@ const gameEngine = ((slot) => {
             && board["slot6"] == board["slot9"]
         ) {return [board["slot3"],board["slot6"],board["slot9"]];}
         else if (
-            board["slot1"] != 0 //diagonal fall
+            board["slot1"] != 0 // diagonal fall
             && board["slot1"] == board["slot5"]
             && board["slot5"] == board["slot9"]
         ) {return [board["slot1"],board["slot5"],board["slot9"]];}
@@ -108,7 +119,17 @@ const gameEngine = ((slot) => {
             return 0;
         }
     }
-    return {clickSlot, getTurn};
+    const resetGame = () => {
+        gameBoard.resetBoard();
+        board = gameBoard.getBoardState();
+        document.getElementById("postgame-win").style.display = "none";
+        document.getElementById("winner").innerHTML = "";
+        document.getElementById("postgame-draw").style.display = "none";
+        turn = 1;
+        slotsLeft = 9;
+        displayBoard();
+    }
+    return {clickSlot, getTurn, resetGame};
 })();
 
 
@@ -136,6 +157,9 @@ function displayBoard() {
         const value = board[slot.id];
         if(value != 0){
             slot.innerHTML = value;
+        }
+        else {
+            slot.innerHTML = "";
         }
     }
     const turn_indicator = document.getElementById("turn-indicator");
@@ -170,6 +194,14 @@ function addListeners() {
             update(slot);
         });
     }
+    const play_again = document.getElementsByClassName("play-again");
+    for (const button of play_again) {
+        button.addEventListener('click', (event) => {
+            gameEngine.resetGame();
+        });
+    }
+        
+    
 }
 
 addListeners();
